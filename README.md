@@ -1,6 +1,6 @@
 # KOReader Things
 
-A homepage for my KOReader-related projects: plugins, Android-focused experiments, and small patches that make KOReader fit my reading setup better.
+A homepage for my KOReader-related projects: Android-focused plugins and one small user patch that make KOReader fit my reading setup better.
 
 ## Plugins
 
@@ -24,26 +24,13 @@ This lets you use your normal Android keyboard app for KOReader text input, incl
 
 ## Patches
 
-### [KOReader Patches](https://github.com/titandrive/koreader_things)
+### [UI Font Patch](https://github.com/titandrive/koreader/blob/main/patches/2--ui-font_updated.lua)
 
-Small patches and tweaks for KOReader that do not make sense as standalone plugins.
+A KOReader user patch that adds a UI font picker to the file manager and reader settings menus.
 
-This is where I keep changes that patch KOReader behavior directly, experiment with upstream changes, or support my personal KOReader setup. These may be rougher than the plugin repos and may need to be updated when KOReader changes.
+It lets you choose the font used by KOReader's interface, saves the selected font, updates KOReader's UI font map, and prompts for a restart so the change applies cleanly. This is a modified version of sebdelsol's UI font patch with fixes for newer KOReader behavior and Android devices where font paths can differ from KOReader's normal font scan.
 
-## Installation
+Install it as:
 
-Each plugin has its own README and release downloads:
-
-- [Syncest releases](https://github.com/titandrive/syncest/releases)
-- [Bluetooth Configurator releases](https://github.com/titandrive/bluetoothconfigurator.koplugin/releases)
-- [KOBoard releases](https://github.com/titandrive/koboard/releases)
-
-In general, KOReader plugins are installed by placing the `.koplugin` folder inside KOReader's `plugins` directory and restarting KOReader.
-
-Patches are different: check the patch repo for details, because they may depend on a specific KOReader version or source layout.
-
-## Platform Notes
-
-Most of these projects are focused on KOReader running on Android-based e-readers, especially devices like Boox, Bigme, and other Android readers.
-
-Check each project before installing. Some are Android-only and will not work on Kindle, Kobo, or other non-Android KOReader platforms.
+```text
+2--ui-font.lua
