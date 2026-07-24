@@ -25,11 +25,13 @@ local _ = require("gettext")
 
 local GESTURE_GROUPS = {
     {
+        title = _("Tap"),
         items = {
             "tap_center",
         },
     },
     {
+        title = _("Long-press"),
         items = {
             "hold_top_center",
             "hold_center",
@@ -37,6 +39,7 @@ local GESTURE_GROUPS = {
         },
     },
     {
+        title = _("One-finger swipe"),
         items = {
             "one_finger_swipe_top_to_center",
             "one_finger_swipe_center_to_top",
@@ -45,6 +48,7 @@ local GESTURE_GROUPS = {
         },
     },
     {
+        title = _("Two-finger swipe"),
         multitouch = true,
         items = {
             "two_finger_swipe_top_to_center",
@@ -56,18 +60,18 @@ local GESTURE_GROUPS = {
 }
 
 local GESTURE_TITLES = {
-    tap_center = _("Tap center"),
-    hold_top_center = _("Long-press top center"),
-    hold_bottom_center = _("Long-press bottom center"),
-    hold_center = _("Long-press center"),
-    one_finger_swipe_top_to_center = _("One-finger swipe: top to center"),
-    two_finger_swipe_top_to_center = _("Two-finger swipe: top to center"),
-    one_finger_swipe_bottom_to_center = _("One-finger swipe: bottom to center"),
-    two_finger_swipe_bottom_to_center = _("Two-finger swipe: bottom to center"),
-    one_finger_swipe_center_to_top = _("One-finger swipe: center to top"),
-    two_finger_swipe_center_to_top = _("Two-finger swipe: center to top"),
-    one_finger_swipe_center_to_bottom = _("One-finger swipe: center to bottom"),
-    two_finger_swipe_center_to_bottom = _("Two-finger swipe: center to bottom"),
+    tap_center = _("Center"),
+    hold_top_center = _("Top center"),
+    hold_bottom_center = _("Bottom center"),
+    hold_center = _("Center"),
+    one_finger_swipe_top_to_center = _("Top to center"),
+    two_finger_swipe_top_to_center = _("Top to center"),
+    one_finger_swipe_bottom_to_center = _("Bottom to center"),
+    two_finger_swipe_bottom_to_center = _("Bottom to center"),
+    one_finger_swipe_center_to_top = _("Center to top"),
+    two_finger_swipe_center_to_top = _("Center to top"),
+    one_finger_swipe_center_to_bottom = _("Center to bottom"),
+    two_finger_swipe_center_to_bottom = _("Center to bottom"),
 }
 
 -- Ratios are relative to the current screen orientation.
@@ -225,6 +229,10 @@ local function install(Gestures)
         local items = {}
         for group_index, group in ipairs(GESTURE_GROUPS) do
             if not group.multitouch or self.has_multitouch then
+                table.insert(items, {
+                    text = group.title,
+                    enabled = false,
+                })
                 for item_index, gesture in ipairs(group.items) do
                     local end_of_group = item_index == #group.items
                         and group_index < #GESTURE_GROUPS
