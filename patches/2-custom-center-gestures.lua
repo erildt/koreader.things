@@ -240,6 +240,7 @@ local function install(Gestures)
                 end
             end
         end
+        items.max_per_page = #items
 
         table.insert(manager.sub_item_table, {
             text = _("Center gestures"),

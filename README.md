@@ -63,7 +63,7 @@ additional assignable gestures:
 The Center gestures menu keeps everything on one menu level, with titled
 sections for taps, long-presses, one-finger swipes, and two-finger swipes.
 Items use short direction labels such as **Top to center** beneath the relevant
-section title.
+section title, and the complete list is kept on a single page.
 
 Each gesture can have different actions in the Reader and File Manager, just
 like KOReader's built-in gestures. The swipe gestures check both their starting
