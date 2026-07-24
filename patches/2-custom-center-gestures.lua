@@ -1,7 +1,7 @@
 -- 2-custom-center-gestures.lua
 --
--- Adds fourteen assignable gestures to KOReader's Gesture manager:
---   * Tap: top center / bottom center
+-- Adds twelve assignable gestures to KOReader's Gesture manager:
+--   * Tap: screen center
 --   * Long-press: top center / bottom center
 --   * Tap / long-press: screen center
 --   * One-finger swipe: top center to screen center
@@ -25,15 +25,11 @@ local _ = require("gettext")
 
 local GESTURE_GROUPS = {
     {
-        title = _("Taps"),
         items = {
-            "tap_top_center",
             "tap_center",
-            "tap_bottom_center",
         },
     },
     {
-        title = _("Long-presses"),
         items = {
             "hold_top_center",
             "hold_center",
@@ -41,7 +37,6 @@ local GESTURE_GROUPS = {
         },
     },
     {
-        title = _("One-finger swipes"),
         items = {
             "one_finger_swipe_top_to_center",
             "one_finger_swipe_center_to_top",
@@ -50,7 +45,6 @@ local GESTURE_GROUPS = {
         },
     },
     {
-        title = _("Two-finger swipes"),
         multitouch = true,
         items = {
             "two_finger_swipe_top_to_center",
@@ -62,8 +56,6 @@ local GESTURE_GROUPS = {
 }
 
 local GESTURE_TITLES = {
-    tap_top_center = _("Tap top center"),
-    tap_bottom_center = _("Tap bottom center"),
     tap_center = _("Tap center"),
     hold_top_center = _("Long-press top center"),
     hold_bottom_center = _("Long-press bottom center"),
@@ -179,10 +171,6 @@ local function install(Gestures)
     function Gestures:initGesture(...)
         original_initGesture(self, ...)
 
-        register_zone(self, "tap_top_center", "tap", TOP_CENTER,
-            common_overrides(self, "tap", false))
-        register_zone(self, "tap_bottom_center", "tap", BOTTOM_CENTER,
-            common_overrides(self, "tap", true))
         register_zone(self, "tap_center", "tap", SCREEN_CENTER,
             common_overrides(self, "tap", false))
         register_zone(self, "hold_top_center", "hold", TOP_CENTER,
@@ -234,23 +222,20 @@ local function install(Gestures)
         local manager = menu_items.gesture_manager
         if not manager or not manager.sub_item_table then return end
 
-        local groups = {}
-        for _, group in ipairs(GESTURE_GROUPS) do
+        local items = {}
+        for group_index, group in ipairs(GESTURE_GROUPS) do
             if not group.multitouch or self.has_multitouch then
-                local items = {}
-                for _, gesture in ipairs(group.items) do
-                    table.insert(items, self:genSubItem(gesture))
+                for item_index, gesture in ipairs(group.items) do
+                    local end_of_group = item_index == #group.items
+                        and group_index < #GESTURE_GROUPS
+                    table.insert(items, self:genSubItem(gesture, end_of_group))
                 end
-                table.insert(groups, {
-                    text = group.title,
-                    sub_item_table = items,
-                })
             end
         end
 
         table.insert(manager.sub_item_table, {
             text = _("Center gestures"),
-            sub_item_table = groups,
+            sub_item_table = items,
         })
     end
 end
