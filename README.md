@@ -1,10 +1,12 @@
 # KOReader Things
 
-A homepage for my KOReader-related projects: Android-focused plugins and one small user patch that make KOReader fit my reading setup better.
+A homepage for my KOReader-related plugins and user patches.
 
 ## Plugins
 
 ### [Syncest](https://github.com/titandrive/syncest)
+
+**Platforms:** Multi-platform
 
 Syncest syncs KOReader reading data to a WebDAV folder you control.
 
@@ -12,11 +14,15 @@ It can sync reading progress, annotations, reading stats, vocabulary, and an opt
 
 ### [Bluetooth Configurator](https://github.com/titandrive/bluetoothconfigurator.koplugin)
 
+**Platforms:** Android only
+
 Bluetooth Configurator makes it easier to map Bluetooth page turners, controllers, remotes, and hardware keyboards to KOReader actions on Android.
 
 Instead of manually editing KOReader keymapping files, you can press a button, pick an action, and save the binding from inside KOReader. It supports separate bindings for the reader and file manager.
 
 ### [KOBoard](https://github.com/titandrive/koboard)
+
+**Platforms:** Android only
 
 KOBoard replaces KOReader's built-in virtual keyboard with the Android system keyboard.
 
