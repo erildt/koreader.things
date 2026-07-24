@@ -1,12 +1,15 @@
 -- 2-custom-center-gestures.lua
 --
--- Adds eight assignable gestures to KOReader's Gesture manager:
+-- Adds fourteen assignable gestures to KOReader's Gesture manager:
 --   * Tap: top center / bottom center
 --   * Long-press: top center / bottom center
+--   * Tap / long-press: screen center
 --   * One-finger swipe: top center to screen center
 --   * Two-finger swipe: top center to screen center
 --   * One-finger swipe: bottom center to screen center
 --   * Two-finger swipe: bottom center to screen center
+--   * One-finger swipe: screen center to top center / bottom center
+--   * Two-finger swipe: screen center to top center / bottom center
 --
 -- INSTALLATION:
 --   Copy this file into koreader/patches/2-custom-center-gestures.lua,
@@ -23,23 +26,35 @@ local _ = require("gettext")
 local GESTURE_ITEMS = {
     "tap_top_center",
     "tap_bottom_center",
+    "tap_center",
     "hold_top_center",
     "hold_bottom_center",
+    "hold_center",
     "one_finger_swipe_top_to_center",
     "two_finger_swipe_top_to_center",
     "one_finger_swipe_bottom_to_center",
     "two_finger_swipe_bottom_to_center",
+    "one_finger_swipe_center_to_top",
+    "two_finger_swipe_center_to_top",
+    "one_finger_swipe_center_to_bottom",
+    "two_finger_swipe_center_to_bottom",
 }
 
 local GESTURE_TITLES = {
     tap_top_center = _("Tap top center"),
     tap_bottom_center = _("Tap bottom center"),
+    tap_center = _("Tap center"),
     hold_top_center = _("Long-press top center"),
     hold_bottom_center = _("Long-press bottom center"),
+    hold_center = _("Long-press center"),
     one_finger_swipe_top_to_center = _("One-finger swipe: top to center"),
     two_finger_swipe_top_to_center = _("Two-finger swipe: top to center"),
     one_finger_swipe_bottom_to_center = _("One-finger swipe: bottom to center"),
     two_finger_swipe_bottom_to_center = _("Two-finger swipe: bottom to center"),
+    one_finger_swipe_center_to_top = _("One-finger swipe: center to top"),
+    two_finger_swipe_center_to_top = _("Two-finger swipe: center to top"),
+    one_finger_swipe_center_to_bottom = _("One-finger swipe: center to bottom"),
+    two_finger_swipe_center_to_bottom = _("Two-finger swipe: center to bottom"),
 }
 
 -- Ratios are relative to the current screen orientation.
@@ -51,21 +66,21 @@ local BOTTOM_CENTER = {
     ratio_x = 0.25, ratio_y = 0.82,
     ratio_w = 0.50, ratio_h = 0.18,
 }
+local SCREEN_CENTER = {
+    ratio_x = 0.20, ratio_y = 0.35,
+    ratio_w = 0.60, ratio_h = 0.30,
+}
 
--- A top-to-center swipe must lift inside this central target.
-local END_MIN_X, END_MAX_X = 0.20, 0.80
-local END_MIN_Y, END_MAX_Y = 0.35, 0.65
-
-local function ends_in_center(gesture)
+local function ends_in_zone(gesture, zone)
     local end_pos = gesture.end_pos
     if not end_pos then return false end
 
     local Screen = require("device").screen
     local width, height = Screen:getWidth(), Screen:getHeight()
-    return end_pos.x >= width * END_MIN_X
-        and end_pos.x <= width * END_MAX_X
-        and end_pos.y >= height * END_MIN_Y
-        and end_pos.y <= height * END_MAX_Y
+    return end_pos.x >= width * zone.ratio_x
+        and end_pos.x <= width * (zone.ratio_x + zone.ratio_w)
+        and end_pos.y >= height * zone.ratio_y
+        and end_pos.y <= height * (zone.ratio_y + zone.ratio_h)
 end
 
 -- Execute a configured action without KOReader's "Ignore hold on corners"
@@ -113,7 +128,8 @@ local function common_overrides(self, gesture_type, bottom)
     end
 end
 
-local function register_zone(self, name, gesture_type, zone, overrides, expected_direction)
+local function register_zone(self, name, gesture_type, zone, overrides,
+        expected_direction, endpoint_zone)
     self.ui:registerTouchZones({
         {
             id = name,
@@ -122,7 +138,8 @@ local function register_zone(self, name, gesture_type, zone, overrides, expected
             overrides = overrides,
             handler = function(gesture)
                 if expected_direction then
-                    if gesture.direction ~= expected_direction or not ends_in_center(gesture) then
+                    if gesture.direction ~= expected_direction
+                            or not ends_in_zone(gesture, endpoint_zone) then
                         return
                     end
                 end
@@ -145,22 +162,36 @@ local function install(Gestures)
             common_overrides(self, "tap", false))
         register_zone(self, "tap_bottom_center", "tap", BOTTOM_CENTER,
             common_overrides(self, "tap", true))
+        register_zone(self, "tap_center", "tap", SCREEN_CENTER,
+            common_overrides(self, "tap", false))
         register_zone(self, "hold_top_center", "hold", TOP_CENTER,
             common_overrides(self, "hold", false))
         register_zone(self, "hold_bottom_center", "hold", BOTTOM_CENTER,
             common_overrides(self, "hold", true))
+        register_zone(self, "hold_center", "hold", SCREEN_CENTER,
+            common_overrides(self, "hold", false))
         register_zone(self, "one_finger_swipe_top_to_center", "swipe", TOP_CENTER,
-            common_overrides(self, "swipe", false), "south")
+            common_overrides(self, "swipe", false), "south", SCREEN_CENTER)
         register_zone(self, "one_finger_swipe_bottom_to_center", "swipe", BOTTOM_CENTER,
-            common_overrides(self, "swipe", true), "north")
+            common_overrides(self, "swipe", true), "north", SCREEN_CENTER)
+        register_zone(self, "one_finger_swipe_center_to_top", "swipe", SCREEN_CENTER,
+            common_overrides(self, "swipe", false), "north", TOP_CENTER)
+        register_zone(self, "one_finger_swipe_center_to_bottom", "swipe", SCREEN_CENTER,
+            common_overrides(self, "swipe", true), "south", BOTTOM_CENTER)
 
         if self.has_multitouch then
             register_zone(self, "two_finger_swipe_top_to_center",
                 "two_finger_swipe", TOP_CENTER,
-                { "two_finger_swipe_south" }, "south")
+                { "two_finger_swipe_south" }, "south", SCREEN_CENTER)
             register_zone(self, "two_finger_swipe_bottom_to_center",
                 "two_finger_swipe", BOTTOM_CENTER,
-                { "two_finger_swipe_north" }, "north")
+                { "two_finger_swipe_north" }, "north", SCREEN_CENTER)
+            register_zone(self, "two_finger_swipe_center_to_top",
+                "two_finger_swipe", SCREEN_CENTER,
+                { "two_finger_swipe_north" }, "north", TOP_CENTER)
+            register_zone(self, "two_finger_swipe_center_to_bottom",
+                "two_finger_swipe", SCREEN_CENTER,
+                { "two_finger_swipe_south" }, "south", BOTTOM_CENTER)
         end
     end
 
@@ -186,6 +217,8 @@ local function install(Gestures)
         for _, gesture in ipairs(GESTURE_ITEMS) do
             local is_two_finger = gesture == "two_finger_swipe_top_to_center"
                 or gesture == "two_finger_swipe_bottom_to_center"
+                or gesture == "two_finger_swipe_center_to_top"
+                or gesture == "two_finger_swipe_center_to_bottom"
             if not is_two_finger or self.has_multitouch then
                 table.insert(items, self:genSubItem(gesture))
             end

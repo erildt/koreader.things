@@ -50,13 +50,15 @@ Install it as:
 
 ### [Custom Center Gestures Patch](patches/2-custom-center-gestures.lua)
 
-Adds a **Center gestures** section to KOReader's Gesture Manager with eight
+Adds a **Center gestures** section to KOReader's Gesture Manager with fourteen
 additional assignable gestures:
 
-- Tap at the top center or bottom center
-- Long-press at the top center or bottom center
+- Tap at the top center, screen center, or bottom center
+- Long-press at the top center, screen center, or bottom center
 - One-finger swipe from the top or bottom to the screen center
 - Two-finger swipe from the top or bottom to the screen center
+- One-finger swipe from the screen center to the top or bottom
+- Two-finger swipe from the screen center to the top or bottom
 
 Each gesture can have different actions in the Reader and File Manager, just
 like KOReader's built-in gestures. The swipe gestures check both their starting
