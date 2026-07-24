@@ -28,9 +28,19 @@ This lets you use your normal Android keyboard app for KOReader text input, incl
 
 A KOReader user patch that adds a UI font picker to the file manager and reader settings menus.
 
-It lets you choose the font used by KOReader's interface, saves the selected font, updates KOReader's UI font map, and prompts for a restart so the change applies cleanly. This is a modified version of sebdelsol's UI font patch with fixes for newer KOReader behavior and Android devices where font paths can differ from KOReader's normal font scan.
+It lets you choose the font used by KOReader's interface, saves the selected font, updates KOReader's UI font map, and prompts for a restart so the change applies cleanly.
 
 Original patch by [sebdelsol](https://github.com/sebdelsol/KOReader.patches).
+
+Changes from the original:
+
+- Uses crengine's discovered font faces directly instead of requiring their
+  paths to also match KOReader's separate `FontList` scan. This prevents valid
+  fonts from disappearing on devices where the two path sources differ,
+  including some Android and Boox setups.
+- Asks crengine for each font's actual bold face instead of guessing it by
+  changing `-Regular` to `-Bold` in the filename. If no bold face is available,
+  it safely falls back to the regular face.
 
 Install it as:
 
