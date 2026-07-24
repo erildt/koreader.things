@@ -30,6 +30,8 @@ A KOReader user patch that adds a UI font picker to the file manager and reader 
 
 It lets you choose the font used by KOReader's interface, saves the selected font, updates KOReader's UI font map, and prompts for a restart so the change applies cleanly. This is a modified version of sebdelsol's UI font patch with fixes for newer KOReader behavior and Android devices where font paths can differ from KOReader's normal font scan.
 
+Original patch by [sebdelsol](https://github.com/sebdelsol/KOReader.patches).
+
 Install it as:
 
 ```text
