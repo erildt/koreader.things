@@ -63,6 +63,9 @@ like KOReader's built-in gestures. The swipe gestures check both their starting
 zone and endpoint, allowing the two-finger variants to remain distinct from the
 normal full-screen two-finger swipe up and down gestures.
 
+Inspired by the r/KOReader post
+[“Bunch of custom gestures”](https://www.reddit.com/r/koreader/comments/1v1dczh/bunch_of_custom_gestures/).
+
 Install it as:
 
 ```text
