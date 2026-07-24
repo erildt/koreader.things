@@ -246,6 +246,7 @@ local function install(Gestures)
             text = _("Center gestures"),
             sub_item_table = items,
         })
+        manager.sub_item_table.max_per_page = #manager.sub_item_table
     end
 end
 
