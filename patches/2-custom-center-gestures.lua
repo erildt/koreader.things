@@ -23,21 +23,42 @@ local Event = require("ui/event")
 local PluginLoader = require("pluginloader")
 local _ = require("gettext")
 
-local GESTURE_ITEMS = {
-    "tap_top_center",
-    "tap_bottom_center",
-    "tap_center",
-    "hold_top_center",
-    "hold_bottom_center",
-    "hold_center",
-    "one_finger_swipe_top_to_center",
-    "two_finger_swipe_top_to_center",
-    "one_finger_swipe_bottom_to_center",
-    "two_finger_swipe_bottom_to_center",
-    "one_finger_swipe_center_to_top",
-    "two_finger_swipe_center_to_top",
-    "one_finger_swipe_center_to_bottom",
-    "two_finger_swipe_center_to_bottom",
+local GESTURE_GROUPS = {
+    {
+        title = _("Taps"),
+        items = {
+            "tap_top_center",
+            "tap_center",
+            "tap_bottom_center",
+        },
+    },
+    {
+        title = _("Long-presses"),
+        items = {
+            "hold_top_center",
+            "hold_center",
+            "hold_bottom_center",
+        },
+    },
+    {
+        title = _("One-finger swipes"),
+        items = {
+            "one_finger_swipe_top_to_center",
+            "one_finger_swipe_center_to_top",
+            "one_finger_swipe_bottom_to_center",
+            "one_finger_swipe_center_to_bottom",
+        },
+    },
+    {
+        title = _("Two-finger swipes"),
+        multitouch = true,
+        items = {
+            "two_finger_swipe_top_to_center",
+            "two_finger_swipe_center_to_top",
+            "two_finger_swipe_bottom_to_center",
+            "two_finger_swipe_center_to_bottom",
+        },
+    },
 }
 
 local GESTURE_TITLES = {
@@ -213,20 +234,23 @@ local function install(Gestures)
         local manager = menu_items.gesture_manager
         if not manager or not manager.sub_item_table then return end
 
-        local items = {}
-        for _, gesture in ipairs(GESTURE_ITEMS) do
-            local is_two_finger = gesture == "two_finger_swipe_top_to_center"
-                or gesture == "two_finger_swipe_bottom_to_center"
-                or gesture == "two_finger_swipe_center_to_top"
-                or gesture == "two_finger_swipe_center_to_bottom"
-            if not is_two_finger or self.has_multitouch then
-                table.insert(items, self:genSubItem(gesture))
+        local groups = {}
+        for _, group in ipairs(GESTURE_GROUPS) do
+            if not group.multitouch or self.has_multitouch then
+                local items = {}
+                for _, gesture in ipairs(group.items) do
+                    table.insert(items, self:genSubItem(gesture))
+                end
+                table.insert(groups, {
+                    text = group.title,
+                    sub_item_table = items,
+                })
             end
         end
 
         table.insert(manager.sub_item_table, {
             text = _("Center gestures"),
-            sub_item_table = items,
+            sub_item_table = groups,
         })
     end
 end

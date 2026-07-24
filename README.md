@@ -60,6 +60,9 @@ additional assignable gestures:
 - One-finger swipe from the screen center to the top or bottom
 - Two-finger swipe from the screen center to the top or bottom
 
+The Center gestures menu organizes these into separate **Taps**,
+**Long-presses**, **One-finger swipes**, and **Two-finger swipes** sections.
+
 Each gesture can have different actions in the Reader and File Manager, just
 like KOReader's built-in gestures. The swipe gestures check both their starting
 zone and endpoint, allowing the two-finger variants to remain distinct from the
