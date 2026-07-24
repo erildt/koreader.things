@@ -87,6 +87,11 @@ like KOReader's built-in gestures. The swipe gestures check both their starting
 zone and endpoint, allowing the two-finger variants to remain distinct from the
 normal full-screen two-finger swipe up and down gestures.
 
+> **Note:** Custom gestures may overlap with existing KOReader actions in the
+> same screen area. For example, assigning an action to **Long-press → Center**
+> in the Reader will take priority over the normal long-press used to select and
+> highlight text in that center zone.
+
 Inspired by the r/KOReader post
 [“Bunch of custom gestures”](https://www.reddit.com/r/koreader/comments/1v1dczh/bunch_of_custom_gestures/).
 
