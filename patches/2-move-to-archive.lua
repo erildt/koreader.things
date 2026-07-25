@@ -5,6 +5,8 @@
 local DataStorage = require("datastorage")
 local DocSettings = require("docsettings")
 local FileManager = require("apps/filemanager/filemanager")
+local ReaderStatus = require("apps/reader/modules/readerstatus")
+local ButtonDialog = require("ui/widget/buttondialog")
 local ConfirmBox = require("ui/widget/confirmbox")
 local InfoMessage = require("ui/widget/infomessage")
 local LuaSettings = require("luasettings")
@@ -29,20 +31,45 @@ local function parent_dir(file)
 end
 
 local function close_file_dialogs(fm)
+    local closed = {}
     local function close(dialog)
-        if dialog then UIManager:close(dialog) end
+        if dialog and not closed[dialog] then
+            closed[dialog] = true
+            UIManager:close(dialog)
+        end
     end
     close(fm.file_chooser and fm.file_chooser.file_dialog)
     close(fm.history and fm.history.file_dialog)
+    close(fm.history and fm.history.booklist_menu
+        and fm.history.booklist_menu.file_dialog)
     close(fm.collections and fm.collections.file_dialog)
+    close(fm.collections and fm.collections.booklist_menu
+        and fm.collections.booklist_menu.file_dialog)
     close(fm.filesearcher and fm.filesearcher.file_dialog)
+    close(fm.filesearcher and fm.filesearcher.booklist_menu
+        and fm.filesearcher.booklist_menu.file_dialog)
 end
 
 local function refresh_views(fm)
-    if fm.file_chooser then fm.file_chooser:refreshPath() end
     if fm.history and fm.history.booklist_menu then
         fm.history:updateItemTable()
     end
+    if fm.collections and fm.collections.booklist_menu then
+        fm.collections:updateItemTable()
+    end
+    if fm.filesearcher and fm.filesearcher.booklist_menu then
+        fm.filesearcher:updateItemTable()
+    end
+
+    -- The File Manager may still be covered by History, Collections, search,
+    -- or the long-press dialog. Refresh it after the current close operations
+    -- have been processed so its newly exposed Library view is repainted.
+    UIManager:nextTick(function()
+        if fm.file_chooser then
+            fm:onRefresh()
+            UIManager:setDirty(fm, "ui")
+        end
+    end)
 end
 
 local function move_book(fm, file, destination_dir, message, archive_settings, original_dirs)
@@ -60,6 +87,88 @@ local function move_book(fm, file, destination_dir, message, archive_settings, o
     close_file_dialogs(fm)
     refresh_views(fm)
     UIManager:show(InfoMessage:new{ text = message, timeout = 3 })
+end
+
+local function mark_complete_and_archive(reader_status)
+    local file = reader_status.document.file
+    local source_dir = parent_dir(file)
+    local archive_settings = LuaSettings:open(settings_path)
+    local archive_dir = with_slash(archive_settings:readSetting("archive_dir"))
+    if not archive_dir or lfs.attributes(archive_dir, "mode") ~= "directory" then
+        UIManager:show(InfoMessage:new{
+            text = _("Set an archive folder with Move to archive first."),
+            timeout = 3,
+        })
+        return
+    end
+    if source_dir == archive_dir then
+        UIManager:show(InfoMessage:new{
+            text = _("This book is already in the archive."),
+            timeout = 3,
+        })
+        return
+    end
+
+    local _source_dir, filename = util.splitFilePathName(file)
+    local destination = archive_dir .. filename
+    local original_dirs = archive_settings:readSetting(
+        "library_archive_original_dirs") or {}
+    original_dirs[destination] = source_dir
+
+    reader_status:markBook(true)
+    reader_status.ui.doc_settings:flush()
+    local end_dialog = UIManager:getTopmostVisibleWidget()
+    if end_dialog and end_dialog.name == "end_document" then
+        UIManager:close(end_dialog)
+    end
+    reader_status.ui:onClose()
+
+    -- Wait until ReaderUI has released the document before moving its file
+    -- and sidecar, then return to the folder it was archived from.
+    UIManager:nextTick(function()
+        if FileManager:moveFile(file, archive_dir) then
+            require("readhistory"):updateItem(file, destination)
+            require("readcollection"):updateItem(file, destination)
+            DocSettings.updateLocation(file, destination, false)
+            archive_settings:saveSetting(
+                "library_archive_original_dirs", original_dirs)
+            archive_settings:flush()
+            FileManager:showFiles(source_dir)
+            UIManager:show(InfoMessage:new{
+                text = _("Book marked as complete and moved to archive."),
+                timeout = 3,
+            })
+        else
+            FileManager:showFiles(source_dir, file)
+            UIManager:show(InfoMessage:new{
+                text = _("Failed to move book to archive."),
+                timeout = 3,
+            })
+        end
+    end)
+end
+
+-- Append an archive action to KOReader's stock end-of-book popup without
+-- replacing its native buttons or completion logic.
+local original_onEndOfBook = ReaderStatus.onEndOfBook
+function ReaderStatus:onEndOfBook(...)
+    local original_new = ButtonDialog.new
+    ButtonDialog.new = function(class, options)
+        if options and options.name == "end_document" and options.buttons then
+            table.insert(options.buttons, {{
+                text = _("Mark as complete and archive"),
+                callback = function()
+                    mark_complete_and_archive(self)
+                end,
+            }})
+        end
+        return original_new(class, options)
+    end
+
+    local results = { pcall(original_onEndOfBook, self, ...) }
+    ButtonDialog.new = original_new
+    if not results[1] then error(results[2]) end
+    return unpack(results, 2)
 end
 
 local function archive_button(fm, file, is_file)
