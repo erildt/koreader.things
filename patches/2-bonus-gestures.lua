@@ -1,9 +1,8 @@
--- 2-custom-center-gestures.lua
+-- 2-bonus-gestures.lua
 --
--- Adds twelve assignable gestures to KOReader's Gesture manager:
+-- Adds fourteen assignable gestures to KOReader's Gesture manager:
 --   * Tap: screen center
---   * Long-press: top center / bottom center
---   * Tap / long-press: screen center
+--   * Long-press: top center / center left / center / center right / bottom center
 --   * One-finger swipe: top center to screen center
 --   * Two-finger swipe: top center to screen center
 --   * One-finger swipe: bottom center to screen center
@@ -12,11 +11,11 @@
 --   * Two-finger swipe: screen center to top center / bottom center
 --
 -- INSTALLATION:
---   Copy this file into koreader/patches/2-custom-center-gestures.lua,
+--   Copy this file into koreader/patches/2-bonus-gestures.lua,
 --   then restart KOReader.
 --
 -- The gestures are deliberately unassigned by default. Configure them under:
---   Gesture manager > Center gestures
+--   Gesture manager > Bonus gestures
 
 local Dispatcher = require("dispatcher")
 local Event = require("ui/event")
@@ -34,7 +33,9 @@ local GESTURE_GROUPS = {
         title = _("Long-press"),
         items = {
             "hold_top_center",
+            "hold_center_left",
             "hold_center",
+            "hold_center_right",
             "hold_bottom_center",
         },
     },
@@ -63,7 +64,9 @@ local GESTURE_TITLES = {
     tap_center = _("Center"),
     hold_top_center = _("Top center"),
     hold_bottom_center = _("Bottom center"),
-    hold_center = _("Center"),
+    hold_center_left = _("Center left"),
+    hold_center = _("Center / center"),
+    hold_center_right = _("Center right"),
     one_finger_swipe_top_to_center = _("Top to center"),
     two_finger_swipe_top_to_center = _("Top to center"),
     one_finger_swipe_bottom_to_center = _("Bottom to center"),
@@ -86,6 +89,14 @@ local BOTTOM_CENTER = {
 local SCREEN_CENTER = {
     ratio_x = 0.20, ratio_y = 0.35,
     ratio_w = 0.60, ratio_h = 0.30,
+}
+local CENTER_LEFT = {
+    ratio_x = 0.00, ratio_y = 0.25,
+    ratio_w = 0.20, ratio_h = 0.50,
+}
+local CENTER_RIGHT = {
+    ratio_x = 0.80, ratio_y = 0.25,
+    ratio_w = 0.20, ratio_h = 0.50,
 }
 -- Reverse swipes may stop sooner than edge-originating swipes.
 local TOP_SHORT_TARGET = {
@@ -176,8 +187,8 @@ local function register_zone(self, name, gesture_type, zone, overrides,
 end
 
 local function install(Gestures)
-    if Gestures._custom_center_gestures_installed then return end
-    Gestures._custom_center_gestures_installed = true
+    if Gestures._bonus_gestures_installed then return end
+    Gestures._bonus_gestures_installed = true
 
     -- Add the new touch zones whenever the Gesture plugin initializes.
     local original_initGesture = Gestures.initGesture
@@ -190,7 +201,11 @@ local function install(Gestures)
             common_overrides(self, "hold", false))
         register_zone(self, "hold_bottom_center", "hold", BOTTOM_CENTER,
             common_overrides(self, "hold", true))
+        register_zone(self, "hold_center_left", "hold", CENTER_LEFT,
+            common_overrides(self, "hold", false))
         register_zone(self, "hold_center", "hold", SCREEN_CENTER,
+            common_overrides(self, "hold", false))
+        register_zone(self, "hold_center_right", "hold", CENTER_RIGHT,
             common_overrides(self, "hold", false))
         register_zone(self, "one_finger_swipe_top_to_center", "swipe", TOP_CENTER,
             common_overrides(self, "swipe", false), "south", SCREEN_CENTER)
@@ -252,7 +267,7 @@ local function install(Gestures)
         items.max_per_page = #items
 
         table.insert(manager.sub_item_table, {
-            text = _("Center gestures"),
+            text = _("Bonus gestures"),
             sub_item_table = items,
         })
         manager.sub_item_table.max_per_page = #manager.sub_item_table

@@ -66,16 +66,18 @@ Install it as:
 2-move-to-archive.lua
 ```
 
-### [Custom Center Gestures Patch](patches/2-custom-center-gestures.lua)
+### [Bonus Gestures Patch](patches/2-bonus-gestures.lua)
 
-Adds a **Center gestures** section to KOReader's Gesture Manager with twelve
+Adds a **Bonus gestures** section to KOReader's Gesture Manager with fourteen
 additional assignable gestures. They appear in this order:
 
 - **Tap**
   - Center
 - **Long-press**
   - Top center
-  - Center
+  - Center left
+  - Center / center
+  - Center right
   - Bottom center
 - **One-finger swipe**
   - Top to center
@@ -94,7 +96,7 @@ zone and endpoint, allowing the two-finger variants to remain distinct from the
 normal full-screen two-finger swipe up and down gestures.
 
 > **Note:** Custom gestures may overlap with existing KOReader actions in the
-> same screen area. For example, assigning an action to **Long-press → Center**
+> same screen area. For example, assigning an action to **Long-press → Center / center**
 > in the Reader will take priority over the normal long-press used to select and
 > highlight text in that center zone.
 
@@ -104,5 +106,5 @@ Inspired by the r/KOReader post
 Install it as:
 
 ```text
-2-custom-center-gestures.lua
+2-bonus-gestures.lua
 ```
