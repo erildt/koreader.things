@@ -56,11 +56,24 @@ Install it as:
 
 ### [Move to Archive Patch](patches/2-move-to-archive.lua)
 
-A KOReader user patch that adds **Move to archive** to the long-press book menu in History (library), Collections, file search, and File Manager views. After moving a book, the menu closes and the active view refreshes immediately.
+A KOReader user patch that adds archive actions to the book menus and end-of-book popup.
 
-For books already in the configured archive folder, the action changes to **Move to library**. The patch remembers each book's original folder when archiving it and restores it there; for books archived before the patch was installed, it falls back to KOReader's HOME folder.
+How it works:
 
-The end-of-book popup also gains **Mark as complete and archive**, which marks the finished book as complete, moves it to the configured archive folder, and returns to the folder it was archived from.
+- **Move to archive** appears in the long-press book menu in History (library),
+  Collections, file search, and File Manager views.
+- The first time you use it, the patch asks you to select an archive folder.
+- Moving a book closes the long-press menu and immediately refreshes the active
+  view, so the old entry does not remain visible.
+- Inside the configured archive folder, the action becomes **Move to library**.
+  Books are returned to the folder they came from. If the patch has no saved
+  original folder for a book, it uses KOReader's HOME folder.
+- The end-of-book popup gains **Mark as complete and archive**. This marks the
+  book as complete, moves it and its sidecar data to the configured archive
+  folder, closes the reader, and returns to the folder the book came from.
+
+The archive folder and original-folder mappings are stored in
+`settings/move_to_archive_settings.lua`.
 
 Install it as:
 
