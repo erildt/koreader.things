@@ -51,7 +51,7 @@ Changes from the original:
 Install it as:
 
 ```text
-2--ui-font.lua
+2--ui-font_enhanced.lua
 ```
 
 ### [Move to Archive Patch](patches/2-move-to-archive.lua)
@@ -143,4 +143,3 @@ Install it as:
 ```text
 2-action-finder.lua
 ```
-

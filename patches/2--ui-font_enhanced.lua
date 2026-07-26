@@ -1,5 +1,5 @@
 -- Enhanced version of sebdelsol's ui-font patch that fixes a few issues. https://github.com/sebdelsol/KOReader.patches
--- NAME IT "2--ui-font.lua": it NEEDS to be the 1st user patch to be executed
+-- Keep the "2--" prefix: this needs to be the first user patch executed.
 
 local Font = require("ui/font")
 local Version = require("version")
