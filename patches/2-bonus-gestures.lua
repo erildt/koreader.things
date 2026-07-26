@@ -1,4 +1,5 @@
 -- 2-bonus-gestures.lua
+-- Repository: https://github.com/titandrive/koreader_things
 --
 -- Adds fourteen assignable gestures to KOReader's Gesture manager:
 --   * Tap: screen center

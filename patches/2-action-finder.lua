@@ -1,4 +1,5 @@
 -- 2-action-finder.lua
+-- Repository: https://github.com/titandrive/koreader_things
 --
 -- Adds action search to KOReader's Dispatcher menus, including the action
 -- chooser opened from Gesture manager.
