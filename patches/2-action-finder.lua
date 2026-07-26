@@ -1,10 +1,10 @@
--- 2-gesture-finder.lua
+-- 2-action-finder.lua
 --
 -- Adds action search to KOReader's Dispatcher menus, including the action
 -- chooser opened from Gesture manager.
 --
 -- INSTALLATION:
---   Copy this file into koreader/patches/2-gesture-finder.lua,
+--   Copy this file into koreader/patches/2-action-finder.lua,
 --   then restart KOReader.
 
 local Dispatcher = require("dispatcher")
@@ -15,8 +15,8 @@ local Utf8Proc = require("ffi/utf8proc")
 local _ = require("gettext")
 local T = require("ffi/util").template
 
-if not Dispatcher._gesture_finder_installed then
-    Dispatcher._gesture_finder_installed = true
+if not Dispatcher._action_finder_installed then
+    Dispatcher._action_finder_installed = true
 
     local original_addSubMenu = Dispatcher.addSubMenu
 
@@ -61,7 +61,7 @@ if not Dispatcher._gesture_finder_installed then
         end
 
         table.insert(touchmenu.item_table_stack, touchmenu.item_table)
-        touchmenu.parent_id = "gesture_finder_search"
+        touchmenu.parent_id = "action_finder_search"
         touchmenu.item_table = result_items
         touchmenu:updateItems(1)
     end
@@ -71,7 +71,7 @@ if not Dispatcher._gesture_finder_installed then
         search_dialog = InputDialog:new{
             title = _("Search actions"),
             description = _("Find an action by name (case insensitive)."),
-            input = G_reader_settings:readSetting("gesture_finder_search", ""),
+            input = G_reader_settings:readSetting("action_finder_search", ""),
             input_hint = _("Action name"),
             buttons = {
                 {
@@ -87,7 +87,7 @@ if not Dispatcher._gesture_finder_installed then
                         is_enter_default = true,
                         callback = function()
                             local query = search_dialog:getInputText()
-                            G_reader_settings:saveSetting("gesture_finder_search", query)
+                            G_reader_settings:saveSetting("action_finder_search", query)
                             UIManager:close(search_dialog)
                             UIManager:nextTick(function()
                                 show_results(touchmenu, sections, query)
@@ -116,7 +116,7 @@ if not Dispatcher._gesture_finder_installed then
         if #sections > 0 then
             table.insert(menu, previous_count + 2, {
                 text = _("Search actions"),
-                menu_item_id = "gesture_finder_search",
+                menu_item_id = "action_finder_search",
                 keep_menu_open = true,
                 callback = function(touchmenu)
                     show_search_dialog(touchmenu, sections)
