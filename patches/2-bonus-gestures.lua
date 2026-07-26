@@ -61,7 +61,7 @@ local GESTURE_GROUPS = {
 }
 
 local GESTURE_TITLES = {
-    tap_center = _("Center"),
+    tap_center = _("Center / center"),
     hold_top_center = _("Top center"),
     hold_bottom_center = _("Bottom center"),
     hold_center_left = _("Center left"),

@@ -87,7 +87,7 @@ Adds a **Bonus gestures** section to KOReader's Gesture Manager with fourteen
 additional assignable gestures. They appear in this order:
 
 - **Tap**
-  - Center
+  - Center / center
 - **Long-press**
   - Top center
   - Center left
