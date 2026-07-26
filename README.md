@@ -123,3 +123,18 @@ Install it as:
 ```text
 2-bonus-gestures.lua
 ```
+
+### [Gesture Finder Patch](patches/2-gesture-finder.lua)
+
+Adds **Search actions** to KOReader's dispatcher menus, including the action
+chooser in Gesture Manager.
+
+Search is case-insensitive and includes actions registered by plugins as well
+as device-specific actions. Results show their original category, and selecting
+a result behaves exactly like selecting that action from its category.
+
+Install it as:
+
+```text
+2-gesture-finder.lua
+```
