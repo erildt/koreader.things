@@ -135,11 +135,13 @@ existing dispatcher menu, show their original category, and retain the normal
 checkbox and configuration behavior. Use the menu's up arrow to return to the
 category list.
 
+<img width="300" alt="CleanShot 2026-07-26 at 15 14 48@2x" src="https://github.com/user-attachments/assets/5bd27d58-8573-4caf-958b-d237ac9166c4" />
+<img width="300"  alt="CleanShot 2026-07-26 at 15 15 16@2x" src="https://github.com/user-attachments/assets/1e35246b-852d-4ab3-871c-aacd849bc460" />
+
 Install it as:
 
 ```text
 2-gesture-finder.lua
 ```
-<img width="250" alt="CleanShot 2026-07-26 at 15 14 48@2x" src="https://github.com/user-attachments/assets/5bd27d58-8573-4caf-958b-d237ac9166c4" />
-<img width="250"  alt="CleanShot 2026-07-26 at 15 15 16@2x" src="https://github.com/user-attachments/assets/1e35246b-852d-4ab3-871c-aacd849bc460" />
+
 
