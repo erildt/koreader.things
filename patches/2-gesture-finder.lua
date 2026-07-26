@@ -7,12 +7,9 @@
 --   Copy this file into koreader/patches/2-gesture-finder.lua,
 --   then restart KOReader.
 
-local CenterContainer = require("ui/widget/container/centercontainer")
-local Device = require("device")
 local Dispatcher = require("dispatcher")
 local InfoMessage = require("ui/widget/infomessage")
 local InputDialog = require("ui/widget/inputdialog")
-local Menu = require("ui/widget/menu")
 local UIManager = require("ui/uimanager")
 local Utf8Proc = require("ffi/utf8proc")
 local _ = require("gettext")
@@ -53,45 +50,20 @@ if not Dispatcher._gesture_finder_installed then
         end
 
         local result_items = {}
-        local results_container
         for _, match in ipairs(matches) do
-            local found = match
-            table.insert(result_items, {
-                text = found.title,
-                mandatory = found.section,
-                callback = function()
-                    UIManager:close(results_container)
-                    UIManager:nextTick(function()
-                        touchmenu:onMenuSelect(found.action)
-                    end)
-                end,
-            })
+            local result = {}
+            for key, value in pairs(match.action) do
+                result[key] = value
+            end
+            result.text = match.title .. "  ·  " .. match.section
+            result.text_func = nil
+            table.insert(result_items, result)
         end
 
-        local results_menu = Menu:new{
-            title = _("Search actions"),
-            subtitle = T(_("%1 matches for “%2”"), #matches, query),
-            item_table = result_items,
-            width = math.floor(Device.screen:getWidth() * 0.9),
-            height = math.floor(Device.screen:getHeight() * 0.9),
-            single_line = true,
-            items_per_page = 10,
-            items_font_size = Menu.getItemFontSize(10),
-            onMenuSelect = function(_, item)
-                if item.callback then
-                    item.callback()
-                end
-            end,
-            close_callback = function()
-                UIManager:close(results_container)
-            end,
-        }
-        results_container = CenterContainer:new{
-            dimen = Device.screen:getSize(),
-            results_menu,
-        }
-        results_menu.show_parent = results_container
-        UIManager:show(results_container)
+        table.insert(touchmenu.item_table_stack, touchmenu.item_table)
+        touchmenu.parent_id = "gesture_finder_search"
+        touchmenu.item_table = result_items
+        touchmenu:updateItems(1)
     end
 
     local function show_search_dialog(touchmenu, sections)
@@ -117,7 +89,9 @@ if not Dispatcher._gesture_finder_installed then
                             local query = search_dialog:getInputText()
                             G_reader_settings:saveSetting("gesture_finder_search", query)
                             UIManager:close(search_dialog)
-                            show_results(touchmenu, sections, query)
+                            UIManager:nextTick(function()
+                                show_results(touchmenu, sections, query)
+                            end)
                         end,
                     },
                 },
@@ -142,6 +116,7 @@ if not Dispatcher._gesture_finder_installed then
         if #sections > 0 then
             table.insert(menu, previous_count + 2, {
                 text = _("Search actions"),
+                menu_item_id = "gesture_finder_search",
                 keep_menu_open = true,
                 callback = function(touchmenu)
                     show_search_dialog(touchmenu, sections)

@@ -130,8 +130,10 @@ Adds **Search actions** to KOReader's dispatcher menus, including the action
 chooser in Gesture Manager.
 
 Search is case-insensitive and includes actions registered by plugins as well
-as device-specific actions. Results show their original category, and selecting
-a result behaves exactly like selecting that action from its category.
+as device-specific actions. Results replace the category list inside the
+existing dispatcher menu, show their original category, and retain the normal
+checkbox and configuration behavior. Use the menu's up arrow to return to the
+category list.
 
 Install it as:
 
