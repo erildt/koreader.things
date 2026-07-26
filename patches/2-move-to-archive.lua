@@ -1,5 +1,5 @@
 -- 2-move-to-archive.lua
--- Repository: https://github.com/titandrive/koreader_things
+-- Repository: https://github.com/titandrive/koreader.things
 --
 -- Add Move to archive / Move to library to KOReader's file-dialog buttons.
 -- This applies to the built-in History (library), Collections, file search,

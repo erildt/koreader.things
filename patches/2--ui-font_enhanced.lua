@@ -1,5 +1,5 @@
 -- Enhanced version of sebdelsol's ui-font patch that fixes a few issues. https://github.com/sebdelsol/KOReader.patches
--- Repository: https://github.com/titandrive/koreader_things
+-- Repository: https://github.com/titandrive/koreader.things
 -- Keep the "2--" prefix: this needs to be the first user patch executed.
 
 local Font = require("ui/font")
