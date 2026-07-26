@@ -30,7 +30,7 @@ This lets you use your normal Android keyboard app for KOReader text input, incl
 
 ## Patches
 
-### [UI Font Patch](https://github.com/titandrive/koreader/blob/main/patches/2--ui-font_updated.lua)
+### [UI Font Patch](patches/2--ui-font_enhanced.lua)
 
 A KOReader user patch that adds a UI font picker to the file manager and reader settings menus.
 
@@ -143,5 +143,4 @@ Install it as:
 ```text
 2-action-finder.lua
 ```
-
 
