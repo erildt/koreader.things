@@ -4,7 +4,7 @@ A homepage for my KOReader-related plugins and user patches.
 
 ## Plugins
 
-### [Syncest](https://github.com/titandrive/syncest)
+### [Syncest](https://github.com/titandrive/syncest) (`syncest.koplugin`)
 
 **Platforms:** Multi-platform
 
@@ -12,7 +12,7 @@ Syncest syncs KOReader reading data to a WebDAV folder you control.
 
 It can sync reading progress, annotations, reading stats, vocabulary, and an optional book library across multiple KOReader devices. The goal is to keep your reading data in your own storage instead of tying it to a single device or service.
 
-### [Bluetooth Configurator](https://github.com/titandrive/bluetoothconfigurator.koplugin)
+### [Bluetooth Configurator](https://github.com/titandrive/bluetoothconfigurator.koplugin) (`bluetoothconfigurator.koplugin`)
 
 **Platforms:** Android only
 
@@ -20,7 +20,7 @@ Bluetooth Configurator makes it easier to map Bluetooth page turners, controller
 
 Instead of manually editing KOReader keymapping files, you can press a button, pick an action, and save the binding from inside KOReader. It supports separate bindings for the reader and file manager.
 
-### [KOBoard](https://github.com/titandrive/koboard)
+### [KOBoard](https://github.com/titandrive/koboard) (`koboard.koplugin`)
 
 **Platforms:** Android only
 
@@ -28,7 +28,7 @@ KOBoard replaces KOReader's built-in virtual keyboard with the Android system ke
 
 This lets you use your normal Android keyboard app for KOReader text input, including keyboards like Gboard, Samsung Keyboard, and Heliboard. It is Android-only and experimental.
 
-### [Moments of Zen](https://github.com/titandrive/momentsofzen.koplugin)
+### [Moments of Zen](https://github.com/titandrive/momentsofzen.koplugin) (`momentsofzen.koplugin`)
 
 **Platforms:** Multi-platform
 
