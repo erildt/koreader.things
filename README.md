@@ -39,8 +39,6 @@ of both. Quotes use persistent shuffled decks to avoid repeats, annotation
 quotes can open their highlighted location in the book, and the widget supports
 swipe navigation plus automatic or fixed font sizing.
 
-<img width="300" alt="Zen UI Home screen with the Moments of Zen widget" src="https://github.com/user-attachments/assets/b528aa30-e37a-4205-8ed0-c83abdfc3612" />
-
 ## Patches
 
 ### [UI Font Patch](patches/2--ui-font_enhanced.lua)
