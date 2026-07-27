@@ -39,7 +39,7 @@ of both. Quotes use persistent shuffled decks to avoid repeats, annotation
 quotes can open their highlighted location in the book, and the widget supports
 swipe navigation plus automatic or fixed font sizing.
 
-<img width="200" src="https://github.com/user-attachments/assets/38dc473b-24b9-432f-98a7-cebab9fc291b" />
+<img width="250" src="https://github.com/user-attachments/assets/38dc473b-24b9-432f-98a7-cebab9fc291b" />
 
 
 ## Patches
