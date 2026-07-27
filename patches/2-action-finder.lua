@@ -43,6 +43,22 @@ if not Dispatcher._action_finder_installed then
             end
         end
 
+        table.sort(matches, function(a, b)
+            local a_section = Utf8Proc.lowercase(a.section)
+            local b_section = Utf8Proc.lowercase(b.section)
+            if a_section ~= b_section then
+                return a_section < b_section
+            end
+
+            local a_title = Utf8Proc.lowercase(a.title)
+            local b_title = Utf8Proc.lowercase(b.title)
+            if a_title ~= b_title then
+                return a_title < b_title
+            end
+
+            return a.title < b.title
+        end)
+
         if #matches == 0 then
             UIManager:show(InfoMessage:new{
                 text = T(_("No actions containing “%1” found."), query),
@@ -51,13 +67,24 @@ if not Dispatcher._action_finder_installed then
         end
 
         local result_items = {}
+        local previous_section
         for _, match in ipairs(matches) do
+            if match.section ~= previous_section then
+                table.insert(result_items, {
+                    text = match.section,
+                    enabled = false,
+                    separator = true,
+                })
+                previous_section = match.section
+            end
+
             local result = {}
             for key, value in pairs(match.action) do
                 result[key] = value
             end
-            result.text = match.title .. "  ·  " .. match.section
+            result.text = match.title
             result.text_func = nil
+            result.separator = nil
             table.insert(result_items, result)
         end
 
