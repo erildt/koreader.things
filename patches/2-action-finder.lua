@@ -72,7 +72,7 @@ if not Dispatcher._action_finder_installed then
         search_dialog = InputDialog:new{
             title = _("Search actions"),
             description = _("Find an action by name (case insensitive)."),
-            input = G_reader_settings:readSetting("action_finder_search", ""),
+            input = "",
             input_hint = _("Action name"),
             buttons = {
                 {
@@ -88,7 +88,6 @@ if not Dispatcher._action_finder_installed then
                         is_enter_default = true,
                         callback = function()
                             local query = search_dialog:getInputText()
-                            G_reader_settings:saveSetting("action_finder_search", query)
                             UIManager:close(search_dialog)
                             UIManager:nextTick(function()
                                 show_results(touchmenu, sections, query)
