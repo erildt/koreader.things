@@ -13,6 +13,7 @@ local ButtonDialog = require("ui/widget/buttondialog")
 local ConfirmBox = require("ui/widget/confirmbox")
 local InfoMessage = require("ui/widget/infomessage")
 local LuaSettings = require("luasettings")
+local PluginLoader = require("pluginloader")
 local UIManager = require("ui/uimanager")
 local lfs = require("libs/libkoreader-lfs")
 local util = require("util")
@@ -241,15 +242,65 @@ local function install(fm)
     end)
 end
 
+-- Zen UI replaces KOReader's stock long-press dialog, so the normal
+-- addFileDialogButtons extension rows never reach it. Its context menu accepts
+-- item-specific rows through _zen_extra_buttons; bridge our existing archive
+-- row into that hook after Zen UI has installed its replacement dialog.
+local zen_wrapped_choosers = setmetatable({}, { __mode = "k" })
+local function install_zen_context_button(fm)
+    local file_chooser = fm and fm.file_chooser
+    if not file_chooser or zen_wrapped_choosers[file_chooser] then return end
+
+    local original_showFileDialog = file_chooser.showFileDialog
+    if type(original_showFileDialog) ~= "function" then return end
+
+    file_chooser.showFileDialog = function(self, item, ...)
+        if type(item) == "table" and item.is_file and item.path then
+            local extra = type(item._zen_extra_buttons) == "table"
+                and item._zen_extra_buttons or {}
+            for i = #extra, 1, -1 do
+                if extra[i]._move_to_archive_row then table.remove(extra, i) end
+            end
+            local row = archive_button(fm, item.path, true)
+            if row then
+                if row[1] then
+                    row[1].text = "\u{F07C}  " .. row[1].text
+                    row[1].align = "left"
+                end
+                row._move_to_archive_row = true
+                table.insert(extra, row)
+            end
+            item._zen_extra_buttons = extra
+        end
+        return original_showFileDialog(self, item, ...)
+    end
+    zen_wrapped_choosers[file_chooser] = true
+end
+
 -- Install on future FileManager instances.
 local original_init = FileManager.init
 function FileManager:init(...)
     original_init(self, ...)
     install(self)
+    install_zen_context_button(self)
 end
 
 -- Also support patch reload while File Manager is already alive.
 if FileManager.instance then
     FileManager.instance:removeFileDialogButtons(ROW_ID)
     install(FileManager.instance)
+end
+
+-- Zen UI is a plugin and installs its custom context menu after user patches
+-- have loaded. Wait until plugin loading completes, then wrap the final method.
+local original_loadPlugins = PluginLoader.loadPlugins
+function PluginLoader:loadPlugins(...)
+    local enabled_plugins, disabled_plugins = original_loadPlugins(self, ...)
+    for _, plugin in ipairs(enabled_plugins) do
+        if plugin.name == "zen_ui" then
+            install_zen_context_button(plugin.ui or FileManager.instance)
+            break
+        end
+    end
+    return enabled_plugins, disabled_plugins
 end
