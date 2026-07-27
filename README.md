@@ -28,6 +28,19 @@ KOBoard replaces KOReader's built-in virtual keyboard with the Android system ke
 
 This lets you use your normal Android keyboard app for KOReader text input, including keyboards like Gboard, Samsung Keyboard, and Heliboard. It is Android-only and experimental.
 
+### [Moments of Zen](https://github.com/titandrive/momentsofzen.koplugin)
+
+**Platforms:** Multi-platform
+
+Moments of Zen adds a quote widget to the [Zen UI](https://github.com/AnthonyGress/zen_ui.koplugin) Home page.
+
+It can show custom quotes, highlights from your KOReader annotations, or a mix
+of both. Quotes use persistent shuffled decks to avoid repeats, annotation
+quotes can open their highlighted location in the book, and the widget supports
+swipe navigation plus automatic or fixed font sizing.
+
+<img width="300" alt="Zen UI Home screen with the Moments of Zen widget" src="https://github.com/user-attachments/assets/b528aa30-e37a-4205-8ed0-c83abdfc3612" />
+
 ## Patches
 
 ### [UI Font Patch](patches/2--ui-font_enhanced.lua)
