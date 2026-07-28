@@ -4,7 +4,7 @@ A homepage for my KOReader-related plugins and user patches.
 
 ## Plugins
 
-### [Syncest](https://github.com/titandrive/syncest) (`syncest.koplugin`)
+### [Syncest](https://github.com/titandrive/syncest.koplugin) (`syncest.koplugin`)
 
 **Platforms:** Multi-platform
 
