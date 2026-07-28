@@ -1,4 +1,4 @@
-# KOReader Things
+# koreader.things
 
 A homepage for my KOReader-related plugins and user patches.
 
