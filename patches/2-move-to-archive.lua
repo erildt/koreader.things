@@ -175,6 +175,65 @@ function ReaderStatus:onEndOfBook(...)
     return unpack(results, 2)
 end
 
+-- Zen UI replaces the stock end-of-book ButtonDialog with a custom
+-- BookStatusWidget layout. Extend the same Restart/Open-next button row after
+-- Zen has installed that layout, while reusing the stock archive callback.
+local function install_zen_end_screen_button()
+    local BookStatusWidget = require("ui/widget/bookstatuswidget")
+    if BookStatusWidget._move_to_archive_zen_wrapped then return end
+
+    local original_genBookInfoGroup = BookStatusWidget.genBookInfoGroup
+    if type(original_genBookInfoGroup) ~= "function" then return end
+
+    BookStatusWidget.genBookInfoGroup = function(self, ...)
+        local zen_generateRateGroup = rawget(self, "generateRateGroup")
+        if type(zen_generateRateGroup) ~= "function" then
+            return original_genBookInfoGroup(self, ...)
+        end
+
+        self.generateRateGroup = function(status_widget, width, height, rating)
+            local group = zen_generateRateGroup(status_widget, width, height, rating)
+            if type(group) ~= "table" or not group[1] then return group end
+
+            local Button = require("ui/widget/button")
+            local CenterContainer = require("ui/widget/container/centercontainer")
+            local Device = require("device")
+            local Geom = require("ui/geometry")
+            local VerticalGroup = require("ui/widget/verticalgroup")
+            local VerticalSpan = require("ui/widget/verticalspan")
+            local gap = Device.screen:scaleBySize(8)
+            local archive_button = Button:new{
+                text = _("Mark as complete and archive"),
+                width = math.floor(width * 0.55),
+                show_parent = status_widget,
+                callback = function()
+                    local reader_status = status_widget.ui and status_widget.ui.status
+                    if reader_status then
+                        mark_complete_and_archive(reader_status)
+                    end
+                end,
+            }
+            local archive_height = archive_button:getSize().h
+            local children = {
+                group[1],
+                VerticalSpan:new{ width = gap },
+                CenterContainer:new{
+                    dimen = Geom:new{ w = width, h = archive_height },
+                    archive_button,
+                },
+            }
+            for i = 2, #group do children[#children + 1] = group[i] end
+            return VerticalGroup:new(children)
+        end
+
+        local results = { pcall(original_genBookInfoGroup, self, ...) }
+        self.generateRateGroup = zen_generateRateGroup
+        if not results[1] then error(results[2]) end
+        return unpack(results, 2)
+    end
+    BookStatusWidget._move_to_archive_zen_wrapped = true
+end
+
 local function archive_button(fm, file, is_file)
     if not is_file or lfs.attributes(file, "mode") ~= "file" then return nil end
 
@@ -299,6 +358,7 @@ function PluginLoader:loadPlugins(...)
     for _, plugin in ipairs(enabled_plugins) do
         if plugin.name == "zen_ui" then
             install_zen_context_button(plugin.ui or FileManager.instance)
+            install_zen_end_screen_button()
             break
         end
     end
