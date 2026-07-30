@@ -44,6 +44,22 @@ swipe navigation plus automatic or fixed font sizing.
 
 ## Patches
 
+### [Menu Breadcrumbs Patch](patches/2-menu-breadcrumbs.lua)
+
+Adds a breadcrumb row to KOReader's nested top menus so the current menu
+hierarchy remains visible. Long paths are left-truncated to preserve the most
+specific entries. Tap a breadcrumb to return directly to that submenu, or
+long-press one to show the complete path.
+
+Based on [koreader-menu-breadcrumbs](https://github.com/Khady/koreader-menu-breadcrumbs)
+by [Khady](https://github.com/Khady).
+
+Install it as:
+
+```text
+2-menu-breadcrumbs.lua
+```
+
 ### [UI Font Patch](patches/2--ui-font_enhanced.lua)
 
 A KOReader user patch that adds a UI font picker to the file manager and reader settings menus.
