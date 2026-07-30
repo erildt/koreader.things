@@ -22,7 +22,7 @@ Instead of manually editing KOReader keymapping files, you can press a button, p
 
 ### [Rotator](https://github.com/titandrive/rotator.koplugin) (`rotator.koplugin`)
 
-**Platforms:** Android only (verified on Boox and Samsung One UI)
+**Platforms:** Android only
 
 Rotator controls Android's system-wide screen rotation from KOReader. It can
 toggle autorotate, lock the current orientation, cycle orientations, or rotate
