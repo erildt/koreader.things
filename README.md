@@ -20,7 +20,7 @@ Bluetooth Configurator makes it easier to map Bluetooth page turners, controller
 
 Instead of manually editing KOReader keymapping files, you can press a button, pick an action, and save the binding from inside KOReader. It supports separate bindings for the reader and file manager.
 
-### [Rotator](https://github.com/titandrive/rotator.koplugin) (`androidautorotate.koplugin`)
+### [Rotator](https://github.com/titandrive/rotator.koplugin) (`rotator.koplugin`)
 
 **Platforms:** Android only (verified on Boox and Samsung One UI)
 
