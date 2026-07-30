@@ -34,6 +34,12 @@ screen. Rotator requires Android's one-time **Modify system settings**
 permission, but does not require root or ADB during normal use. Other Android
 systems may behave differently.
 
+Use Rotator directly from **Tools → Rotator** to toggle autorotate, cycle the
+screen, or rotate it by 90, 180, or 270 degrees. Rotator also registers each
+operation with KOReader's Dispatcher, so the same actions can be assigned to
+gestures, hardware buttons, profiles, or anything else that uses KOReader's
+action picker.
+
 ### [KOBoard](https://github.com/titandrive/koboard) (`koboard.koplugin`)
 
 **Platforms:** Android only
