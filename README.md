@@ -20,6 +20,20 @@ Bluetooth Configurator makes it easier to map Bluetooth page turners, controller
 
 Instead of manually editing KOReader keymapping files, you can press a button, pick an action, and save the binding from inside KOReader. It supports separate bindings for the reader and file manager.
 
+### [Rotator](https://github.com/titandrive/rotator.koplugin) (`androidautorotate.koplugin`)
+
+**Platforms:** Android only (verified on Boox and Samsung One UI)
+
+Rotator controls Android's system-wide screen rotation from KOReader. It can
+toggle autorotate, lock the current orientation, cycle orientations, or rotate
+90, 180, or 270 degrees relative to the current position.
+
+Every operation can be assigned to KOReader gestures and actions. Brief
+lock/unlock indicators confirm changes without covering the center of the
+screen. Rotator requires Android's one-time **Modify system settings**
+permission, but does not require root or ADB during normal use. Other Android
+systems may behave differently.
+
 ### [KOBoard](https://github.com/titandrive/koboard) (`koboard.koplugin`)
 
 **Platforms:** Android only
@@ -93,6 +107,28 @@ Install it as:
 
 ```text
 2--ui-font_enhanced.lua
+```
+
+### [Fancy Highlight Styles Patch](patches/2-fancy-highlight-styles.lua)
+
+Adds eight highlight styles alongside KOReader's stock styles:
+
+- Wavy
+- Squiggly
+- Dash
+- Dot
+- Double underline
+- Zig-zag
+- Circle
+- Rectangle
+
+The patch also adds adjustable line thickness for the new styles and the stock
+Underline style. Thickness choices are saved and reused automatically.
+
+Install it as:
+
+```text
+2-fancy-highlight-styles.lua
 ```
 
 ### [Move to Archive Patch](patches/2-move-to-archive.lua)
@@ -183,4 +219,25 @@ Install it as:
 
 ```text
 2-action-finder.lua
+```
+
+### [OPDS XML Compatibility Patch](patches/2-opds-xml-compat.lua)
+
+A temporary compatibility patch for KOReader v2026.07 that advertises support
+for both OPDS 2.0 JSON and OPDS 1.x Atom feeds.
+
+It changes the OPDS request's `Accept` value to:
+
+```text
+application/opds+json, application/atom+xml
+```
+
+This fixes OPDS 1.x servers that return an error when KOReader requests only
+OPDS 2.0 JSON. The patch can be removed once the compatibility fix is included
+upstream.
+
+Install it as:
+
+```text
+2-opds-xml-compat.lua
 ```
