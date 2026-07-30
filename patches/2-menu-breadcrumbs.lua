@@ -28,6 +28,22 @@ local BreadcrumbButton = Button:extend{}
 function BreadcrumbButton:onTapSelectButton(_, ges)
     if not ges or not ges.pos then return true end
 
+    -- Segment widths are only needed for hit-testing. Measure them lazily on
+    -- the uncommon breadcrumb tap instead of slowing every submenu transition.
+    if not self._natural_text_width then
+        self._natural_text_width = 0
+        for _, segment in ipairs(self._segments) do
+            local probe = TextWidget:new{
+                text = segment.text,
+                face = self.label_widget.face,
+            }
+            segment.width = probe:getSize().w
+            probe:free()
+            self._natural_text_width =
+                self._natural_text_width + segment.width
+        end
+    end
+
     -- The row is the original single full-width Button. Map the tap back to
     -- the corresponding part of its text without changing that layout.
     local content_width = self.width - 2 * self.padding_h
@@ -37,8 +53,23 @@ function BreadcrumbButton:onTapSelectButton(_, ges)
     for _, segment in ipairs(self._segments) do
         right = right + segment.width
         if text_x <= right then
-            for _ = 1, #self._labels - segment.depth do
-                self._menu:backToUpperMenu(true)
+            local levels = #self._labels - segment.depth
+            if levels > 0 then
+                -- Pop all intermediate levels without rebuilding each one.
+                -- TouchMenu:backToUpperMenu() calls updateItems() on every
+                -- pop, which makes direct breadcrumb jumps unnecessarily slow.
+                for _ = 1, levels do
+                    self._menu.item_table =
+                        table.remove(self._menu.item_table_stack)
+                    table.remove(self._menu._breadcrumb_labels)
+                end
+                if self._menu.item_table.needs_refresh
+                        and self._menu.item_table.refresh_func then
+                    self._menu.item_table =
+                        self._menu.item_table.refresh_func()
+                end
+                self._menu.parent_id = nil
+                self._menu:updateItems(1)
             end
             break
         end
@@ -99,7 +130,6 @@ local function makeBreadcrumbRow(menu, labels)
     button._menu = menu
     button._labels = labels
     button._segments = {}
-    button._natural_text_width = 0
     local previous
     for depth, label in ipairs(labels) do
         if label ~= "" and label ~= previous then
@@ -107,14 +137,7 @@ local function makeBreadcrumbRow(menu, labels)
             if #button._segments > 0 then
                 text = BD.wrap(" " .. breadcrumb_separator .. " ") .. text
             end
-            local probe = TextWidget:new{
-                text = text,
-                face = button.label_widget.face,
-            }
-            local width = probe:getSize().w
-            probe:free()
-            table.insert(button._segments, { depth = depth, width = width })
-            button._natural_text_width = button._natural_text_width + width
+            table.insert(button._segments, { depth = depth, text = text })
             previous = label
         end
     end

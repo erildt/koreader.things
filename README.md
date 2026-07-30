@@ -54,6 +54,17 @@ long-press one to show the complete path.
 Based on [koreader-menu-breadcrumbs](https://github.com/Khady/koreader-menu-breadcrumbs)
 by [Khady](https://github.com/Khady).
 
+Changes from the original:
+
+- Each breadcrumb is navigable: tap one to return directly to that submenu.
+- Long-pressing the breadcrumb row shows the complete path.
+- The row uses a transparent background so it does not cover the menu
+  separator.
+- Direct jumps update the menu stack first and rebuild only the destination,
+  avoiding a redraw for every intermediate level.
+- Breadcrumb segment widths are measured only when the row is tapped, keeping
+  normal submenu navigation responsive.
+
 Install it as:
 
 ```text
