@@ -117,14 +117,6 @@ local BOTTOM_SHORT_TARGET = {
     ratio_x = 0.20, ratio_y = 0.70,
     ratio_w = 0.60, ratio_h = 0.30,
 }
-local TOP_SHORT_TARGET = {
-    ratio_x = 0.20, ratio_y = 0.00,
-    ratio_w = 0.60, ratio_h = 0.30,
-}
-local BOTTOM_SHORT_TARGET = {
-    ratio_x = 0.20, ratio_y = 0.70,
-    ratio_w = 0.60, ratio_h = 0.30,
-}
 local LEFT_SHORT_TARGET = {
     ratio_x = 0.00, ratio_y = 0.20,
     ratio_w = 0.30, ratio_h = 0.60,
