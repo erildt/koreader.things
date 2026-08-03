@@ -235,7 +235,7 @@ local function install(Gestures)
         register_zone(self, "one_finger_swipe_center_to_left", "swipe", SCREEN_CENTER,
             common_overrides(self, "swipe", false), "west", LEFT_SHORT_TARGET)
     	register_zone(self, "one_finger_swipe_center_to_right", "swipe", SCREEN_CENTER,
-            common_overrides(self, "swipe", true), "east", RIGHT_SHORT_TARGET)
+            common_overrides(self, "swipe", false), "east", RIGHT_SHORT_TARGET)
 
         if self.has_multitouch then
             register_zone(self, "two_finger_swipe_top_to_center",
